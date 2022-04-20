@@ -1,12 +1,4 @@
-# .NET Desktop
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      echo 'BBASH!'
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
 
 trigger:
 - main
@@ -20,6 +12,15 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+# .NET Desktop
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo 'BBASH!'
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
