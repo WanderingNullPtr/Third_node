@@ -34,4 +34,5 @@ jobs:
         (robocopy $(Build.SourcesDirectory)\enigma-dev C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
     - script: |    
         cd C:\enigma-dev
-        .\enigma_bootstrap.bat
+        ls
+        enigma_bootstrap.bat
