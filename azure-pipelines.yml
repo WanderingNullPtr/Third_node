@@ -35,12 +35,14 @@ jobs:
         Get-Service 'Windows Audio'
     - script: python3 -m pip install --upgrade Pillow
       displayName: Pillow install
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q"
+      displayName: Default Installed packages
     - script: |
         C:\enigma-dev\enigma_bootstrap.bat
       displayName: Install mingw stuff
   
-    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
-      displayName: Test runner
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q"
+      displayName: Installed Packages
       workingDirectory: C:\enigma-dev
       
       #mingw-w64-x86_64-gtest
