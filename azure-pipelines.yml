@@ -1,29 +1,167 @@
+     
+      
+pr:  # Trigger a build on every PR.
+  branches:
+    include:
+      - '*'  # Must quote since "*" is a YAML reserved character
 
 
-trigger:
-- main
 
-pool:
-  vmImage: 'windows-latest'
+jobs:
+- job: TestHarnessWindows
+  displayName: 'Test Harness Windows'
+  variables:
+    TEST_HARNESS: "true"
+    TRAVIS_OS_NAME: "windows"
+    TRAVIS: "true"
+    TRAVIS_PULL_REQUEST: $(System.PullRequest.PullRequestNumber)
+    TRAVIS_PULL_REQUEST_SHA: $(Build.SourceVersion)
+  pool:
+    vmImage: 'windows-latest'
+  timeoutInMinutes: 360
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  steps:
+    - checkout: self
+      persistCredentials: true
+      path: enigma-dev
+      
+    - script: |
+        (robocopy $(Build.SourcesDirectory) C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
+      displayName: 'Stage ENIGMA'
+  
+    - script: python3 -m pip install --upgrade Pillow
+      displayName: Pillow install
+    - script: ls
+    - script: C:\msys64\msys2_shell.cmd -defterm -no-start -c "pacman -Sy --noconfirm --needed git make rsync mingw-w64-x86_64-toolchain mingw-w64-x86_64-boost mingw-w64-x86_64-pugixml mingw-w64-x86_64-rapidjson mingw-w64-x86_64-yaml-cpp mingw-w64-x86_64-grpc mingw-w64-x86_64-protobuf mingw-w64-x86_64-glm mingw-w64-x86_64-libpng mingw-w64-x86_64-re2 mingw-w64-x86_64-box2d mingw-w64-x86_64-libffi mingw-w64-x86_64-glew mingw-w64-x86_64-openal mingw-w64-x86_64-dumb mingw-w64-x86_64-alure mingw-w64-x86_64-libmodplug mingw-w64-x86_64-libvorbis mingw-w64-x86_64-libogg mingw-w64-x86_64-flac mingw-w64-x86_64-mpg123 mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libgme mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_mixer mingw-w64-x86_64-libepoxy mingw-w64-x86_64-gtest mingw-w64-x86_64-libmodplug lcov
+      displayName: Install mingw stuff
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -c "cd C:/enigma-dev && make all"
+      workingDirectory: C:\enigma-dev
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe --gtest_filter=Regression.*"
+      displayName: Test runner
+      workingDirectory: C:\enigma-dev
+      
+      #mingw-w64-x86_64-gtest
+      #mingw-w64-x86_64-imagemagick
+      #mingw-w64-x86_64-jq 1.6-5
+      #mingw-w64-x86_64-libmodplug
+      #lcov
 
-steps:
-# .NET Desktop
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      echo 'BBASH!'
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-- task: NuGetToolInstaller@1
+      env:
+        _IMGUR_CLIENT_ID: $(imgur_client_id)
+        _BOT_COMMENT_TOKEN: $(bot_comment_token)
+        _BOT_PUSH_ON_GREEN_TOKEN: $(bot_push_on_green_token)
+        _CODECOV_UPLOAD_TOKEN: $(codecov_upload_token)
+      
+    - task: PublishBuildArtifacts@1
+      displayName: 'Push Build Artifacts'
+      inputs:
+        pathtoPublish: C:\enigma-dev\test-harness-out\
+        artifactName: Test-Harness-Png
+        
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
 
+- job: Windows
+  displayName: 'Windows'
+  pool:
+    vmImage: 'windows-latest'
+  timeoutInMinutes: 360
+  variables:
+    COMPILER: gcc
+    OUTPUT: /tmp/test.exe
+
+  steps:
+    - checkout: self
+      persistCredentials: true
+      path: enigma-dev
+     
+    - script: git clone --depth 1 https://github.com/enigma-dev/enigma-android.git android
+      displayName: 'Clone Android Repo'
+
+    - script: |
+        (robocopy $(Build.SourcesDirectory) C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
+      displayName: 'Stage ENIGMA'
+    
+    - script: |
+        C:\enigma-dev\enigma_bootstrap.bat
+      displayName: 'Bootstrap ENIGMA Install'
+
+    - script: |
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "export PLATFORM=%PLATFORM%; ./ci-build.sh && ./share_logs.sh"
+      displayName: 'Run Mode'
+      workingDirectory: C:\enigma-dev
+      env:
+        MODE: Run
+        PLATFORM: Win32
+        GRAPHICS: Direct3D9
+        AUDIO: None
+        COLLISION: None
+        NETWORK: None
+        WIDGETS: None
+        EXTENSIONS: "None"
+
+    - script: |
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "export PLATFORM=%PLATFORM%; ./ci-build.sh && ./share_logs.sh"
+      displayName: 'Compile Mode'
+      workingDirectory: C:\enigma-dev
+      env:
+        MODE: Compile
+        PLATFORM: Win32
+        GRAPHICS: Direct3D9
+        AUDIO: None
+        COLLISION: None
+        NETWORK: None
+        WIDGETS: None
+        EXTENSIONS: "None"
+
+    - script: |
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "export PLATFORM=%PLATFORM%; ./ci-build.sh && ./share_logs.sh"
+      displayName: 'Windows APIs & Extensions'
+      workingDirectory: C:\enigma-dev
+      env:
+        GRAPHICS: Direct3D11 
+        AUDIO: DirectSound
+        WIDGETS: Win32 
+        EXTENSIONS: "DirectShow,WindowsTouch,XInput,MediaControlInterface,FileDropper,IniFilesystem,ExternalFuncs"
+        PLATFORM: Win32
+        MODE: Debug
+        COLLISION: None
+        NETWORK: None
+
+    - script: |
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "export PLATFORM=%PLATFORM%; ./ci-build.sh && ./share_logs.sh"
+      displayName: 'OpenGL1 & OpenAL'
+      workingDirectory: C:\enigma-dev
+      env:
+        GRAPHICS: OpenGL1 
+        AUDIO: OpenAL
+        PLATFORM: Win32
+        MODE: Debug
+        COLLISION: None
+        NETWORK: None
+        WIDGETS: None
+        EXTENSIONS: "None"
+
+    - script: |
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "export PLATFORM=SDL; ./ci-build.sh && ./share_logs.sh"
+      displayName: 'OpenGLES & SDL'
+      workingDirectory: C:\enigma-dev
+      env:
+        GRAPHICS: OpenGLES3
+        PLATFORM: Win32
+        MODE: Debug
+        AUDIO: None
+        COLLISION: None
+        NETWORK: None
+        WIDGETS: None
+        EXTENSIONS: "None"
+
+    - script: |
+        cmd /c C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "rm -rf /tmp/*"
+        "%TMP%\nsis-binary-7208-3\Bin\makensis" /V4 "C:/enigma-dev/enigma.nsi"
+      displayName: 'Build Installer'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Push Build Artifacts'
+      inputs:
+        pathtoPublish: 'C:\Windows\Temp\ENIGMA-installer.exe'
+        artifactName: ENIGMA-installer

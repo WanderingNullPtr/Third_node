@@ -1,32 +1,63 @@
-# Prerequisites
-*.d
+/ENIGMA/
+/emake
+/test-runner
+/emake-tests
+/gm2egm
+/LinuxExtra/
+/android/
+/MacOS/build/Release/EnigmaXcode.app/Contents/Info.plist
+/MacOS/build/Release/EnigmaXcode.app/Contents/Resources/*
+/definitions.h
+/coverage_*.info
+/libEGM.*
+/libProtocols.*
+/app
+/runtime
+/shared/protos/build/
+/shared/protos/codegen
+/CommandLine/libEGM/build/
+/ENIGMAsystem/SHELL/API_Switchboard.h
+/ENIGMAsystem/SHELL/Preprocessor_Environment_Editable/
+/ENIGMAsystem/SHELL/ENIGMAengine
+/ENIGMAsystem/SHELL/.objs
+/ENIGMAsystem/additional/
+/ENIGMAsystem/Additional/
+.deps
+.eobjs/
+/plugins/
+/CompilerSource/bin/
+/CompilerSource/JDI/dox/
+/CompilerSource/JDI/test/defines_linux.txt
+/CompilerSource/JDI/test/defines_mingw.txt
+/CompilerSource/stupidity-buffer/obj
+/ENIGMAsystem/SHELL/.vs/*
+/ENIGMAsystem/SHELL/.vscode/*
+.DS_Store
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+enigma-launch.bat
+enigma-update.bat
+msys-shell.bat
+LGM.ico
+ValgrindOut.xml
+output_log.txt
+hs_err_pid*.log
+*.stackdump
 *.a
-*.lib
-
-# Executables
+*.class
+*.o
+*.d
+*.db
+*.depend
+*.gch
+*.so
+*.dll
+*.dylib
 *.exe
-*.out
-*.app
+*.jar
+*.log
+*.ini
+*.res
+*.cbTemp
+*.layout
+*.epackage
+*~
