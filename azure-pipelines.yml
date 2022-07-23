@@ -31,6 +31,6 @@ jobs:
         Get-Service 'Windows Audio'
     - script: |
         git clone https://github.com/enigma-dev/enigma-dev.git
-        (robocopy \enigma-dev C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
+        (robocopy $(Build.SourcesDirectory)\enigma-dev C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
         cd C:\enigma-dev
         ./enigma-bootstrap.bat
