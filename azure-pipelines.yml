@@ -29,6 +29,10 @@ jobs:
         (robocopy $(Build.SourcesDirectory) C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
       displayName: 'Stage ENIGMA'
   
+    - powershell: |
+        Get-Service 'Windows Audio'
+        Start-Service 'Windows Audio'
+        Get-Service 'Windows Audio'
     - script: python3 -m pip install --upgrade Pillow
       displayName: Pillow install
     - script: ls
@@ -36,7 +40,7 @@ jobs:
       displayName: Install mingw stuff
     - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -c "cd C:/enigma-dev && make all"
       workingDirectory: C:\enigma-dev
-    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe --gtest_filter=Regression.*"
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
       displayName: Test runner
       workingDirectory: C:\enigma-dev
       
