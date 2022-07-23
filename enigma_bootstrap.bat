@@ -34,7 +34,7 @@ curl http://mirrors.enigma-dev.org/LGM-1.0.msi -o "%TMP%\LGM.msi"
 msiexec.exe /i "%TMP%\LGM.msi" INSTALLDIR="C:\enigma-dev" /QN /L*V "%TMP%/idgaf.log"
 
 ::Build emake
-cmd /c C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -c "cd C:/enigma-dev && make all"
+cmd /c C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -c "cd C:/enigma-dev && make emake"
 
 ::Build Installer
 ::"%TMP%\nsis-binary-7208-3\Bin\makensis" /V4 "C:/enigma-dev/enigma.nsi"

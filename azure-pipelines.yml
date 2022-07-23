@@ -2,16 +2,6 @@ pr:  # Trigger a build on every PR.
   branches:
     include:
       - '*'  # Must quote since "*" is a YAML reserved character
-variables:
-- template: azure-vars.yml@radialgm
-- group: Test Harness Auth
-
-jobs:
-- template: azure-jobs.yml@radialgm
-  parameters:
-    repo: radialgm
-    enigmaref: $(Build.SourceBranch)
-
 - job: TestHarness
   displayName: 'Test Harness'
   variables:
