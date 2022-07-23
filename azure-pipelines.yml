@@ -37,7 +37,8 @@ jobs:
       displayName: Pillow install
     - script: |
         RD /S /Q "C:/msys64/"
-        curl http://mirrors.enigma-dev.org/7z1900-x64.msi -o "%TMP%\7z.msi" msiexec.exe /i "%TMP%\7z.msi" /QN /L*V "%TMP%\idgaf.log"
+        curl http://mirrors.enigma-dev.org/7z1900-x64.msi -o "%TMP%\7z.msi" 
+        msiexec.exe /i "%TMP%\7z.msi" /QN /L*V "%TMP%\idgaf.log"
         curl http://mirrors.enigma-dev.org/nsis-binary-7208-3.zip  -o "%TMP%\nsis.zip" "%ProgramFiles%\7-zip/7z" -y -o"%TMP%" x "%TMP%\nsis.zip"
         curl http://mirrors.enigma-dev.org/distrib/msys2-x86_64-latest.tar.xz -o "%TMP%\msys.xz" "%ProgramFiles%\7-zip/7z" -y -o"%TMP%" x "%TMP%\msys.xz" "%ProgramFiles%\7-zip/7z" -y -o"C:\" x "%TMP%\msys"
         curl http://mirrors.enigma-dev.org/pacman.conf -o "C:\msys64\etc\pacman.conf"
