@@ -33,6 +33,6 @@ jobs:
         git clone https://github.com/enigma-dev/enigma-dev.git
         (robocopy $(Build.SourcesDirectory)\enigma-dev C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
     - script: |    
-        cd C:\enigma-dev\enigma-dev
+        cd .\enigma-dev
         ls
         enigma_bootstrap.bat
