@@ -265,7 +265,7 @@ void gather_coverage(const TestConfig &config) {
     " \"lcov"
     " --quiet"
     " --no-external"
-    " --base-directory=ENIGMAsystem/SHELL/"
+    " --base-directory=${PWD}/ENIGMAsystem/SHELL/"  // explicitly defininf PWD
     " --capture "+
     src_dir+" "+
     out_file+" \"";
