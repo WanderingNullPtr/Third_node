@@ -37,9 +37,8 @@ jobs:
         C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "lcov"
       displayName: 'Bootstrap enigma and install pillow'
     - script: |
-        Get-Service: 'Windows Audio'  
         C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q && mkdir test-harness-out"
-        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
       displayName: 'Run Test-Runner'
       workingDirectory: C:\enigma-dev
     - task: PublishBuildArtifacts@1
