@@ -41,11 +41,11 @@ jobs:
       workingDirectory: C:\enigma-dev
 
     - script: ls
-    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -c "cd C:/enigma-dev && make all"
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -c "cd C:/enigma-dev && mkdir test-harness-out && make all"
       workingDirectory: C:\enigma-dev
 
     - script: |
-        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q && mkdir test-harness-out"
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q"
     - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
       displayName: 'Run Test-Runner'
       workingDirectory: C:\enigma-dev
