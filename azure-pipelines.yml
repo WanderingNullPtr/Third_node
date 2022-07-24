@@ -31,6 +31,7 @@ jobs:
         enigma_bootstrap.bat
     - script: |
         test-runner.exe
+      workingDirectory: C:\enigma-dev
 
 - job: TestHarness
   displayName: 'Test Harness'
