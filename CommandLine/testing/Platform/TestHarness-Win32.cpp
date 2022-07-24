@@ -256,10 +256,10 @@ void gather_coverage(const TestConfig &config) {
                  + config.get_or(&TestConfig::mode, "Debug") + "/";
   string out_file = "--output-file=coverage_" + to_string(test_num) + ".info";
 
-  //char shellpath[MAX_PATH]; 
-  //GetEnvironmentVariable( "SHELL", shellpath, MAX_PATH);
+  char shellpath[MAX_PATH]; 
+  GetEnvironmentVariable( "SHELL", shellpath, MAX_PATH);
   string lcovArgs =
-    "/c \"C:\msys64\msys2_shell.cmd\"  -defterm -mingw64 -no-start -here"
+    string(shellpath)+
     " -l -c"
     " \"lcov"
     " --quiet"
@@ -272,7 +272,7 @@ void gather_coverage(const TestConfig &config) {
   ProcessData lcovProcess;
   unsigned long int exitcode;
 
-  if(!CreateProcess(NULL,&lcovArgs[0],NULL,NULL,FALSE,0,NULL,NULL,&lcovProcess.si,&lcovProcess.pi)){
+  if(!CreateProcess(shellpath,&lcovArgs[0],NULL,NULL,FALSE,0,NULL,NULL,&lcovProcess.si,&lcovProcess.pi)){
     GetExitCodeProcess(lcovProcess.pi.hProcess,&exitcode);  //Monitor lcov run
     ADD_FAILURE() << "Coverage failed to execute for test " << test_num << "!\n"
                   <<"Returned "<<exitcode;
