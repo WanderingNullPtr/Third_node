@@ -31,10 +31,10 @@ jobs:
     - script: |
         enigma_bootstrap.bat
         python3 -m pip install --upgrade Pillow
-    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "printenv"
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "lcov"
     - script: |
         Get-Service: 'Windows Audio'  
-        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q"
+        C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "pacman -Q && mkdir test-harness-out"
         C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
       workingDirectory: C:\enigma-dev
 

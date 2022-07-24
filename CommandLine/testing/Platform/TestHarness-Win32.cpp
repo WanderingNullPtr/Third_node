@@ -70,6 +70,7 @@ class ProcessData{
   public:
   PROCESS_INFORMATION pi;
   STARTUPINFO si;
+  HANDLE process_handle = pi.hProcess;
   void meminit(){
     ZeroMemory( &si, sizeof(si));
     si.cb = sizeof(si);
@@ -108,7 +109,7 @@ HWND find_window_by_pid(int proc_id) {
 }
 
 class Win32_TestHarness final: public TestHarness {
- public:
+  public:
  
   string get_caption() final {
     return "TEST";
@@ -255,11 +256,10 @@ void gather_coverage(const TestConfig &config) {
                  + config.get_or(&TestConfig::mode, "Debug") + "/";
   string out_file = "--output-file=coverage_" + to_string(test_num) + ".info";
 
-  char shellpath[MAX_PATH]; 
-  GetEnvironmentVariable( "SHELL", shellpath, MAX_PATH);
-
+  //char shellpath[MAX_PATH]; 
+  //GetEnvironmentVariable( "SHELL", shellpath, MAX_PATH);
   string lcovArgs =
-    string(shellpath)+
+    "/c C:\msys64\msys2_shell.cmd  -defterm -mingw64 -no-start -here"+
     " -l -c"
     " \"lcov"
     " --quiet"
@@ -270,9 +270,12 @@ void gather_coverage(const TestConfig &config) {
     out_file+" \"";
 
   ProcessData lcovProcess;
+  unsigned long int exitcode;
 
-  if(!CreateProcess(shellpath,&lcovArgs[0],NULL,NULL,FALSE,0,NULL,NULL,&lcovProcess.si,&lcovProcess.pi)){
-    ADD_FAILURE() << "Coverage failed to execute for test " << test_num << '!';
+  if(!CreateProcess(NULL,&lcovArgs[0],NULL,NULL,FALSE,0,NULL,NULL,&lcovProcess.si,&lcovProcess.pi)){
+    GetExitCodeProcess(lcovProcess.pi.hProcess,&exitcode);  //Monitor lcov run
+    ADD_FAILURE() << "Coverage failed to execute for test " << test_num << '!\n' 
+                  <<"Returned "<<exitcode;
     return;
   }
   if(WaitForSingleObject(lcovProcess.pi.hProcess,INFINITE)==WAIT_FAILED){
@@ -280,7 +283,6 @@ void gather_coverage(const TestConfig &config) {
                   << " somehow failed...";
     return;
   }
-  unsigned long int exitcode;
   if(GetExitCodeProcess(lcovProcess.pi.hProcess,&exitcode)){
     if(exitcode!=259){ //STILL_ACTIVE = 259
         if(exitcode){
