@@ -29,8 +29,8 @@ jobs:
         (robocopy $(Build.SourcesDirectory) C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
     - script: |
         enigma_bootstrap.bat
-    - script: |
-        test-runner.exe
+    - script: C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "./test-runner.exe"
+
       workingDirectory: C:\enigma-dev
 
 - job: TestHarness
