@@ -259,7 +259,7 @@ void gather_coverage(const TestConfig &config) {
   //char shellpath[MAX_PATH]; 
   //GetEnvironmentVariable( "SHELL", shellpath, MAX_PATH);
   string lcovArgs =
-    "/c C:\msys64\msys2_shell.cmd  -defterm -mingw64 -no-start -here"+
+    "/c \"C:\msys64\msys2_shell.cmd\"  -defterm -mingw64 -no-start -here"
     " -l -c"
     " \"lcov"
     " --quiet"
@@ -274,7 +274,7 @@ void gather_coverage(const TestConfig &config) {
 
   if(!CreateProcess(NULL,&lcovArgs[0],NULL,NULL,FALSE,0,NULL,NULL,&lcovProcess.si,&lcovProcess.pi)){
     GetExitCodeProcess(lcovProcess.pi.hProcess,&exitcode);  //Monitor lcov run
-    ADD_FAILURE() << "Coverage failed to execute for test " << test_num << '!\n' 
+    ADD_FAILURE() << "Coverage failed to execute for test " << test_num << "!\n"
                   <<"Returned "<<exitcode;
     return;
   }
