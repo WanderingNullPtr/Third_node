@@ -4,6 +4,34 @@ pr:  # Trigger a build on every PR.
       - '*'  # Must quote since "*" is a YAML reserved character
 
 jobs:
+- job: TestHarnessWindows
+  displayName: 'Test Harness Windows'
+  variables:
+    TEST_HARNESS: "true"
+    TRAVIS_OS_NAME: "windows"
+    TRAVIS: "true"
+    TRAVIS_PULL_REQUEST: $(System.PullRequest.PullRequestNumber)
+    TRAVIS_PULL_REQUEST_SHA: $(Build.SourceVersion)
+  pool:
+    vmImage: 'windows-latest'
+  timeoutInMinutes: 360
+
+  steps:
+    - checkout: self
+      persistCredentials: true
+      path: enigma-dev
+  
+    - powershell: |
+        Get-Service 'Windows Audio'
+        Start-Service 'Windows Audio'
+        Get-Service 'Windows Audio'
+    - script: |
+        (robocopy $(Build.SourcesDirectory) C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
+    - script: |
+        enigma_bootstrap.bat
+    - script: |
+        test-runner.exe
+
 - job: TestHarness
   displayName: 'Test Harness'
   variables:
