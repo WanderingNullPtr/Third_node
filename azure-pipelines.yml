@@ -30,9 +30,9 @@ jobs:
       displayName: 'printenv'
     - script: |
         (robocopy $(Build.SourcesDirectory) C:\enigma-dev /COPYALL /E) ^& IF %ERRORLEVEL% LEQ 1 exit 0
-
+    - script: enigma_bootstrap.bat
+      displayName: 'Enigma Bootstrap'
     - script: |
-        enigma_bootstrap.bat
         python3 -m pip install --upgrade Pillow
         C:\msys64\msys2_shell.cmd -defterm -mingw64 -no-start -here -lc "lcov"
       displayName: 'Bootstrap enigma and install pillow'
