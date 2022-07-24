@@ -258,6 +258,7 @@ void gather_coverage(const TestConfig &config) {
 
   char shellpath[MAX_PATH]; 
   GetEnvironmentVariable( "SHELL", shellpath, MAX_PATH);
+  system("ls");
   string lcovArgs =
     string(shellpath)+
     " -l -c"
