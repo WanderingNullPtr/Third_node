@@ -320,7 +320,7 @@ TestHarness::launch_and_attach(const string &game, const TestConfig &tc) {
   }
 
   ProcessData lacProcess(true);
-  cout<<"In Run to Completion!\n" // Test which function runs game
+  std::cout<<"In Launch and Attach!!\n"; // Test which function runs game
   if(!CreateProcess(out.c_str(),&out[0],NULL,NULL,FALSE,0,NULL,NULL,&lacProcess.si,&lacProcess.pi)){
         std::cerr<<"Failed to launch";
         return nullptr;
@@ -362,7 +362,7 @@ int TestHarness::run_to_completion(const string &game, const TestConfig &tc) {
   char currentdir[MAX_PATH];
   GetCurrentDirectory(MAX_PATH,currentdir);
   SetCurrentDirectory(game.substr(0, game.find_last_of("\\/")).c_str());
-  cout<<"In Run to Completion!\n" // Test which function runs game
+  std::cout<<"In Run to Completion!\n"; // Test which function runs game
   if(!CreateProcess(out.c_str(),&out[0],NULL,NULL,FALSE,0,NULL,NULL,&rtcProcess.si,&rtcProcess.pi)){
     return ErrorCodes::LAUNCH_FAILED;
   }
