@@ -3,6 +3,7 @@ pr:  # Trigger a build on every PR.
     include:
       - '*'  # Must quote since "*" is a YAML reserved character
 
+jobs:
 - job: TestHarness
   displayName: 'Test Harness'
   variables:
