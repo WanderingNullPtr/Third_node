@@ -33,7 +33,10 @@
 /ENIGMAsystem/SHELL/.vs/*
 /ENIGMAsystem/SHELL/.vscode/*
 .DS_Store
+/test-harness-out/
 
+rawlog_D3D.txt
+rawlog.txt
 enigma-launch.bat
 enigma-update.bat
 msys-shell.bat

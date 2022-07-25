@@ -14,11 +14,11 @@ std::vector<TestConfig> GetValidConfigs(bool platforms, bool graphics, bool audi
   
   for (std::string_view p : {"Win32", "SDL"} ) {
     // FIXME: glgetteximage is used in opengl-common and is unsupported by gles. This function currently is required to copy surfaces in some tests
-    for (std::string_view g : {"Direct3D9", "Direct3D11", "OpenGL1", "OpenGL3"/*, "OpenGLES2", "OpenGLES3"*/ }) {
+    for (std::string_view g : {"OpenGL1", "OpenGL3"/*, "OpenGLES2", "OpenGLES3"*/ }) {
       // Invalid combos
       if (g == "OpenGLES2" && p != "SDL") continue;
       if (g == "OpenGLES3" && p != "SDL") continue;
-      for (std::string_view a : {"OpenAL"}) {
+      for (std::string_view a : {"DirectSound","OpenAL"}) {
         for (std::string_view c : {"Precise", "BBox" }) {
           for (std::string_view w : {"None"}) {
             for (std::string_view n : {"None", "BerkeleySockets", "Asynchronous" }) {
@@ -70,7 +70,6 @@ class ProcessData{
   public:
   PROCESS_INFORMATION pi;
   STARTUPINFO si;
-  HANDLE process_handle = pi.hProcess;
   void meminit(){
     ZeroMemory( &si, sizeof(si));
     si.cb = sizeof(si);
